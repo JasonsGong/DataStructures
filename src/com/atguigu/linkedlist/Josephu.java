@@ -13,6 +13,8 @@ public class Josephu {
         circleSingleLinkedList.addBoy(5);
         //测试遍历环形单向链表
         circleSingleLinkedList.showBoy();
+        //测试生成小孩出圈的序列
+        circleSingleLinkedList.countBoy(1,2,5);
     }
 
 }
@@ -25,7 +27,51 @@ class CircleSingleLinkedList {
 
     /**
      * 根据用户的输入产生一个出队编号的序列
+     *
+     * @param startNo  表示从第几个小孩开始数
+     * @param countNum 表示数几下
+     * @param nums     传入几个小孩
      */
+    public void countBoy(int startNo, int countNum, int nums) {
+        //先对输入的数据进行校验
+        if (first == null || startNo < 0 || startNo > nums) {
+            System.out.println("参数输入有误,请重新输入!");
+            return;
+        }
+        //创建一个辅助指针
+        Boy helper = first;
+        //将helper指向环形链表的最后一个节点
+        while (true) {
+            if (helper.getNext() == first) {
+                break;
+            }
+            helper = helper.getNext();
+        }
+        //将first和helper移动到指定的位置  考虑从第几个小孩开始数
+        //小孩报数前，先让 first 和  helper 移动 k - 1次
+        for (int i = 0; i < startNo - 1; i++) {
+            first = first.getNext();
+            helper = helper.getNext();
+        }
+        //让first和helper移动 m-1次，然后出圈
+        //循环操作  直到圈中只有一个小孩节点
+        while (true){
+            if(helper == first){//说明圈中只有一个节点
+                break;
+            }
+            //让first和helper移动 countNum - 1
+            for (int i = 0; i < countNum - 1; i++) {
+                first = first.getNext();
+                helper = helper.getNext();
+            }
+            //这时first指向的节点就是要出圈的小孩
+            System.out.printf("小孩%d出圈\n",first.getNo());
+            //将first指向的小孩出圈
+            first = first.getNext();
+            helper.setNext(first);
+        }
+        System.out.printf("最后留在圈中小孩编号是:%d \n",helper.getNo());
+    }
 
 
     /**
@@ -39,9 +85,9 @@ class CircleSingleLinkedList {
         }
         //创建一个辅助指针
         Boy curBoy = first;
-        while (true){
-            System.out.printf("小孩的编号:%d \n",curBoy.getNo());
-            if(curBoy.getNext() == first){//说明已经循环一圈了  就不在循环  退出了
+        while (true) {
+            System.out.printf("小孩的编号:%d \n", curBoy.getNo());
+            if (curBoy.getNext() == first) {//说明已经循环一圈了  就不在循环  退出了
                 break;
             }
             //向后移动
